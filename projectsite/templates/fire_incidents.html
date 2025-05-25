@@ -1,0 +1,93 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block content %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+<div class="page-inner">
+  <div class="page-header">
+    <h4 class="page-title">Dashboard</h4>
+    <ul class="breadcrumbs">
+      <li class="nav-home">
+        <a href="#">
+          <i class="flaticon-home"></i>
+        </a>
+      </li>
+      <li class="separator">
+        <i class="flaticon-right-arrow"></i>
+      </li>
+      <li class="nav-item">
+        <a href="#">Maps</a>
+      </li>
+      <li class="separator">
+        <i class="flaticon-right-arrow"></i>
+      </li>
+      <li class="nav-item">
+        <a href="#">Fire Incidents</a>
+      </li>
+    </ul>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card card-transparent">
+        <div class="card-header">
+          <h4 class="card-title text-center">Fire Incident</h4>
+          <p class="card-category text-center">Looks great on any resolution. Made by our friends from <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>.</p>
+        </div>
+        <div class="card-body">
+          <div class="col-md-4 ml-auto mr-auto">
+            <div class="form-group">
+              <select id="city-select" class="form-control">
+                <option value="">Select a city</option>
+                {% for location in locations %}
+                <option value="{{ location.city }}">{{ location.city }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div id="map" style="width: 100%; height: 400px; box-shadow: 2px 2px 12px #ffad46;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script>
+  var map = L.map('map').setView([9.81644, 50.72239], 1);
+  var fireIcon = L.icon({
+      iconUrl: "../static/img/fire.png",
+      iconSize: [60, 60],
+  });
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  var markers = []
+  var locations = {{ locations|safe }};
+
+  // Loop through the locations and their associated incidents
+  locations.forEach(function(location) {
+      var latitude = parseFloat(location.latitude);
+      var longitude = parseFloat(location.longitude);
+      var marker = L.marker([latitude, longitude], { icon: fireIcon }).addTo(map);
+
+      // Adjust popup content to include the count of incidents
+      var popupContent = "<b>" + location.name + "</b><br/>" + location.city + "<br/>Incidents: " + location.num_incidents;
+      marker.bindPopup(popupContent);
+
+      markers.push(marker);
+  });
+
+  // Event listener for city selection
+  document.getElementById('city-select').addEventListener('change', function() {
+    var selectedCity = this.value;
+    markers.forEach(function(marker) {
+      if (marker.getPopup().getContent().includes(selectedCity)) {
+        marker.openPopup();
+      } else {
+        marker.closePopup();
+      }
+    });
+  });
+</script>
+{% endblock %}
