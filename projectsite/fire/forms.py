@@ -7,10 +7,17 @@ class LocationsForm(ModelForm):
         model = Locations
         fields = "__all__"
 
-class IncidentForm(ModelForm):
+class IncidentForm(forms.ModelForm):
+    class Meta:
+        model = Incident
+        fields = ['location', 'date_time', 'severity_level', 'description']
+        widgets = {
+            'date_time': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+        }
     class Meta:
         model = Incident
         fields = "__all__"
+
 
 class FireStationForm(ModelForm):
     class Meta:

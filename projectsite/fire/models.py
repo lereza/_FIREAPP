@@ -37,6 +37,9 @@ class Incident(BaseModel):
     def __str__(self):
         return f"Incident {self.id}: {self.description}"
 
+    class Meta:
+        ordering = ['-date_time']  # or ['-id'] if you want latest first
+
 class FireStation(BaseModel):
     name = models.CharField(max_length=150)
     latitude = models.DecimalField(

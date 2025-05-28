@@ -279,8 +279,100 @@
     <script src="{% static 'js/plugin/sweetalert/sweetalert.min.js' %}"></script>
     <script src="{% static 'js/atlantis.min.js' %}"></script>
 
-    {% block chart %}
+    {% block chart %}{% endblock %}
 
-    {% endblock %}
+    <!-- Toast container at bottom-right -->
+<div id="toast-container" aria-live="polite" aria-atomic="true"
+     style="position: fixed; bottom: 20px; right: 20px; z-index: 1055; display: flex; flex-direction: column; gap: 12px;">
+</div>
+
+{% if messages %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    {% for message in messages %}
+    (function() {
+        const toastType = "{{ message.tags|default:'info' }}";
+
+        const icons = {
+            success: '✅',
+            error: '❌',
+            info: 'ℹ️',
+            warning: '⚠️'
+        };
+
+        const colors = {
+            success: '#22c55e',
+            error: '#ef4444',
+            info: '#3b82f6',
+            warning: '#f59e0b'
+        };
+
+        const toastHTML = `
+            <div class="custom-toast" role="alert" tabindex="-1" aria-label="${toastType} message" style="
+                display: flex;
+                align-items: center;
+                background-color: #fff;
+                border-left: 8px solid ${colors[toastType]};
+                border-radius: 8px;
+                padding: 16px 20px;
+                box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+                min-width: 320px;
+                max-width: 380px;
+                font-family: system-ui, sans-serif;
+                position: relative;
+                transition: all 0.3s ease;
+                opacity: 0;
+                transform: translateY(20px);
+            ">
+                <div style="
+                    font-size: 1.75rem;
+                    margin-right: 14px;
+                    color: ${colors[toastType]};
+                    flex-shrink: 0;
+                ">${icons[toastType]}</div>
+
+                <div style="flex-grow: 1;">
+                    <strong style="display: block; font-size: 1.1rem; margin-bottom: 4px; color: #111;">
+                        ${toastType.charAt(0).toUpperCase() + toastType.slice(1)}
+                    </strong>
+                    <span style="color: #555;">{{ message|escapejs }}</span>
+                </div>
+
+                <button class="close-btn" aria-label="Close notification" style="
+                    background: none;
+                    border: none;
+                    font-size: 1.25rem;
+                    color: #999;
+                    cursor: pointer;
+                    margin-left: 12px;
+                ">&times;</button>
+            </div>`;
+
+        const container = document.getElementById('toast-container');
+        container.insertAdjacentHTML('beforeend', toastHTML);
+
+        setTimeout(() => {
+            const toast = container.lastElementChild;
+            toast.style.opacity = '1';
+            toast.style.transform = 'translateY(0)';
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(20px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 6000);
+
+            toast.querySelector('.close-btn').addEventListener('click', () => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(20px)';
+                setTimeout(() => toast.remove(), 300);
+            });
+        }, 50);
+    })();
+    {% endfor %}
+});
+</script>
+{% endif %}
+
   </body>
 </html>
