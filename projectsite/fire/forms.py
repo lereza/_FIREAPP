@@ -12,11 +12,14 @@ class IncidentForm(forms.ModelForm):
         model = Incident
         fields = ['location', 'date_time', 'severity_level', 'description']
         widgets = {
-            'date_time': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+            'date_time': forms.DateTimeInput(
+                attrs={
+                    'type': 'datetime-local',
+                    'class': 'form-control',
+                    'id': 'id_date_time'
+                }
+            ),
         }
-    class Meta:
-        model = Incident
-        fields = "__all__"
 
 
 class FireStationForm(ModelForm):
@@ -38,5 +41,3 @@ class WeatherConditionsForm(ModelForm):
     class Meta:
         model = WeatherConditions
         fields = "__all__"
-
-

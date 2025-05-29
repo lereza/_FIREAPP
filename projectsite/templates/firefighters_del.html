@@ -1,28 +1,30 @@
-{% extends 'base.html' %} {% load static %} {% block content %}
-<div class="content">
-    <div class="container-fluid">
-        <h4 class="page-title">Delete</h4>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Delete Firefighters</div>
-                        <div class="card-category">{{ object.name }}</div>
-                    </div>
+{% extends 'base.html' %}
+{% load static %}
 
-                    <div class="col-md-6">
-                        <div class="card-body">
-                            <form class="" action="" method="post" novalidate>
-                                <P>Are you sure you want to delete "{{ object.name }}"?</P>
-                                {% csrf_token %} {% include 'includes/form.html' %}
-                                
-                                <div class="form-group">
-                                    <div class="col-md-12 col-sm-3">
-                                        <button type="submit" class="btn btn-primary btn-rounded">Delete</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
+{% block content %}
+<div class="content" style="background-color: #f4f6f9; min-height: 100vh;">
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-6">
+                <div class="card shadow rounded-4" style="border: none; background-color: #ffffff;">
+                    <div class="card-body p-5 text-center">
+                        <h2 class="fw-bold mb-3" style="color: #ff4757;">Delete Firefighter</h2>
+                        <p class="text-muted mb-4">
+                            Are you sure you want to delete <strong style="color: #2f3542;">"{{ object.name }}"</strong>?<br>
+                            This action cannot be undone.
+                        </p>
+
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="d-flex justify-content-center gap-3">
+                                <button type="submit" class="btn" style="background-color: #ff4757; color: #ffffff; border-radius: 12px; padding: 8px 20px;">
+                                    Confirm
+                                </button>
+                                <a href="{% url 'firefighters-list' %}" class="btn" style="background-color: #dcdde1; color: #2f3542; border-radius: 12px; padding: 8px 20px;">
+                                    Cancel
+                                </a>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -30,4 +32,3 @@
     </div>
 </div>
 {% endblock %}
-

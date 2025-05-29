@@ -1,27 +1,58 @@
-{% extends 'base.html' %} {% load static %} {% block content %}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+.card-welcome {
+  background: linear-gradient(135deg, #f9fafb, #e5e7eb); /* very light gradient */
+  color: #334155; /* dark slate text for readability */
+  border-radius: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  padding: 3rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); /* softer shadow */
+}
+
+.card-welcome::after {
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 200px;
+  height: 200px;
+  background: rgba(99, 102, 241, 0.1); /* soft pastel purple circle */
+  border-radius: 50%;
+  animation: float 8s infinite ease-in-out;
+}
+
+.dashboard-welcome {
+  color: #475569; /* medium dark slate for subtext */
+}
+
+.creator-names {
+  color: #64748b; /* muted slate */
+}
+
+</style>
+
 <div class="page-inner">
-  <div class="page-header">
-    <h4 class="page-title">Dashboard</h4>
+  <div class="page-header d-flex justify-content-between align-items-center">
+    <h4 class="page-title text-primary">Dashboard</h4>
     <ul class="breadcrumbs">
-      <li class="nav-home">
-        <a href="#">
-          <i class="flaticon-home"></i>
-        </a>
-      </li>
-      <li class="separator">
-        <i class="flaticon-right-arrow"></i>
-      </li>
-      <li class="nav-item">
-        <a href="#">Pages</a>
-      </li>
-      <li class="separator">
-        <i class="flaticon-right-arrow"></i>
-      </li>
-      <li class="nav-item">
-        <a href="#">Starter Page</a>
-      </li>
+      <li class="nav-home"><a href="#"><i class="flaticon-home"></i></a></li>
+      <li class="separator"><i class="flaticon-right-arrow"></i></li>
+      <li class="nav-item"><a href="#">Pages</a></li>
+      <li class="separator"><i class="flaticon-right-arrow"></i></li>
+      <li class="nav-item"><a href="#">Dashboard</a></li>
     </ul>
   </div>
-  <div class="page-category">Hello World.</div>
+
+  <div class="card card-welcome mt-4">
+    <div class="d-flex flex-column align-items-start gap-2">
+      <h1><span class="emoji">🔥</span> Welcome to FireApp Dashboard</h1>
+      <p class="dashboard-welcome">Real-time insights on incidents, trucks, firefighters, weather conditions, and more—all in one place.</p>
+      <p class="creator-names">Developed with 💡 by <strong>Lereza Mae V. Castillas</strong> & <strong>Olsen C. Ola</strong></p>
+    </div>
+  </div>
 </div>
 {% endblock %}

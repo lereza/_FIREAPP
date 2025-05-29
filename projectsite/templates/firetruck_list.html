@@ -1,42 +1,71 @@
-{% extends 'base.html' %} {% load static %} {% block content %}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  .btn-green {
+    background-color: #2ed573;
+    color: white;
+  }
+
+  .btn-green:hover {
+    background-color: #2ed573;
+    color: white;
+  }
+
+  .btn-red {
+    background-color: #FF5A5F;
+    color: white;
+  }
+
+  .btn-red:hover {
+    background-color: #e14c50;
+    color: white;
+  }
+
+  .custom-container {
+    background-color: #E5E7EB;
+  }
+</style>
+
 <div class="content">
   <div class="page-inner">
-    <h4 class="page-title">List of Fire Truck</h4>
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">Subtitle</div>
-          </div>
-          <br />
-          <div class="col-md-12 row">
-            <div class="col-md-6">
-              <form class="navbar-left navbar-form nav-search mr-md-3" action="{% url 'firetruck-list' %}">
-                <div class="input-group">
-                  <input type="text" placeholder="Search ..." class="form-control" name="q" />
-                  <div class="input-group-append">
-                    <span class="input-group-text">
-                      <i class="la la-search search-icon"></i>
-                    </span>
-                  </div>
-                </div>
-              </form>
-            </div>
-            <div class="col-md-6">
-              <div class="pull-right">
-                <a href="{% url 'firetruck-add' %}" class="btn btn-success btn-rounded">Add Fire Truck</a>
+    <div class="container custom-container p-4 rounded shadow-sm">
+      <h4 class="page-title text-primary mb-4">List of Fire Trucks</h4>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <form class="navbar-left navbar-form nav-search" action="{% url 'firetruck-list' %}">
+            <div class="input-group">
+              <input type="text" placeholder="Search ..." class="form-control" name="q" />
+              <div class="input-group-append">
+                <span class="input-group-text">
+                  <i class="la la-search search-icon"></i>
+                </span>
               </div>
             </div>
-          </div>
-          <div class="card-body">
-            <table class="table table-striped mt-3">
-              <thead>
+          </form>
+        </div>
+        <div class="col-md-6 text-end">
+          <a href="{% url 'firetruck-add' %}" class="btn btn-green btn-rounded">➕ Add Fire Truck</a>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow rounded-4">
+        <div class="card-header bg-light text-dark border-bottom rounded-top-4">
+          <div class="card-title mb-0 fw-semibold">Fire Truck Table</div>
+        </div>
+
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle text-center">
+              <thead class="table-light">
                 <tr>
-                  <th scope="col">Truck Number</th>
-                  <th scope="col">Model</th>
-                  <th scope="col">Water Capacity</th>
-                  <th scope="col">Station</th>
-                  <th scope="col">Action</th>
+                  <th>Truck Number</th>
+                  <th>Model</th>
+                  <th>Water Capacity</th>
+                  <th>Station</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -47,21 +76,24 @@
                   <td>{{ object.capacity }}</td>
                   <td>{{ object.station }}</td>
                   <td>
-                    <a href="{% url 'firetruck-update' object.pk %}">Edit</a>
-                    <a href="{% url 'firetruck-delete' object.pk %}" class="text-danger">Delete</a>
+                    <div class="d-flex justify-content-center gap-2">
+                      <a href="{% url 'firetruck-update' object.pk %}" class="btn btn-sm btn-green">✏️ Edit</a>
+                      <a href="{% url 'firetruck-delete' object.pk %}" class="btn btn-sm btn-red">🗑 Delete</a>
+                    </div>
                   </td>
                 </tr>
                 {% empty %}
                 <tr>
-                  <td colspan="7" style="text-align: center">
-                    <p class="text-sm font-weight-bold mb-0">No Records Found</p>
+                  <td colspan="5" class="text-center text-muted py-4">
+                    <strong>No Records Found</strong>
                   </td>
                 </tr>
                 {% endfor %}
               </tbody>
             </table>
-            {% include 'includes/pagination.html' %}
           </div>
+
+          {% include 'includes/pagination.html' %}
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone 
 
 class BaseModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -30,7 +31,7 @@ class Incident(BaseModel):
         ('Major Fire', 'Major Fire'),
     )
     location = models.ForeignKey(Locations, on_delete=models.CASCADE)
-    date_time = models.DateTimeField(blank=True, null=True)
+    date_time = models.DateTimeField(default=timezone.now, blank=True, null=True) 
     severity_level = models.CharField(max_length=45, choices=SEVERITY_CHOICES)
     description = models.CharField(max_length=250)
 
@@ -38,7 +39,7 @@ class Incident(BaseModel):
         return f"Incident {self.id}: {self.description}"
 
     class Meta:
-        ordering = ['-date_time']  # or ['-id'] if you want latest first
+        ordering = ['-date_time']
 
 class FireStation(BaseModel):
     name = models.CharField(max_length=150)

@@ -1,28 +1,31 @@
-{% extends 'base.html' %} {% load static %} {% block content %}
-<div class="content">
-    <div class="container-fluid">
-        <h4 class="page-title">Add</h4>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Add New Locations</div>
-                        <div class="card-category">Page Subtitle</div>
-                    </div>
+{% extends 'base.html' %}
+{% load static %}
 
-                    <div class="col-md-6">
-                        <div class="card-body">
-                            <form class="" action="" method="post" novalidate>
-                                {% csrf_token %} {% include 'includes/form.html' %}
-                                
-                                <div class="form-group">
-                                    <div class="col-md-12 col-sm-3">
-                                        <button type="submit" class="btn btn-primary btn-rounded">Submit</button>
-                                        <a href="{% url 'locations-list' %}" class="btn btn-secondary btn-rounded">Cancel</a>
-                                    </div>
-                                </div>
-                            </form>
+{% block content %}
+<div class="content" style="background-color: #f4f6f9;">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow rounded-4" style="border: none; background-color: #ffffff;">
+                    <div class="card-body p-4">
+                        <div class="mb-4 text-center">
+                            <h2 class="fw-bold" style="color: #1e90ff;">Add New Location</h2>
+                            <p class="text-muted">Fill out the form below to register a new location.</p>
                         </div>
+
+                        <form method="post" novalidate>
+                            {% csrf_token %}
+                            {% include 'includes/form.html' %}
+
+                            <div class="form-group mt-4 text-end">
+                                <button type="submit" class="btn" style="background-color: #1e90ff; color: #fff; border-radius: 12px; padding: 8px 20px;">
+                                    Submit
+                                </button>
+                                <a href="{% url 'locations-list' %}" class="btn" style="background-color: #ff4757; color: #fff; border-radius: 12px; padding: 8px 20px;">
+                                    Cancel
+                                </a>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

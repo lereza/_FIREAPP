@@ -1,108 +1,111 @@
-{% extends 'base.html' %} {% load static %} {% block content %}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
 
 <div class="page-inner">
   <div class="page-header">
     <h4 class="page-title">Dashboard</h4>
     <ul class="breadcrumbs">
-      <li class="nav-home">
-        <a href="#">
-          <i class="flaticon-home"></i>
-        </a>
-      </li>
-      <li class="separator">
-        <i class="flaticon-right-arrow"></i>
-      </li>
-      <li class="nav-item">
-        <a href="#">Maps</a>
-      </li>
-      <li class="separator">
-        <i class="flaticon-right-arrow"></i>
-      </li>
-      <li class="nav-item">
-        <a href="#">Fire Stations</a>
-      </li>
+      <li class="nav-home"><a href="#"><i class="flaticon-home"></i></a></li>
+      <li class="separator"><i class="flaticon-right-arrow"></i></li>
+      <li class="nav-item"><a href="#">Maps</a></li>
+      <li class="separator"><i class="flaticon-right-arrow"></i></li>
+      <li class="nav-item"><a href="#">Fire Stations</a></li>
     </ul>
   </div>
+
   <div class="row">
     <div class="col-md-12">
       <div class="card card-transparent">
-        <div class="card-header">
-          <h4 class="card-title text-center">Fire Stations</h4>
-          <p class="card-category text-center">Looks great on any resolution. Made by our friends from <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>.</p>
+        <div class="card-header text-center">
+          <h4 class="card-title">Fire Stations</h4>
+          <p class="card-category">
+            View fire station locations on an interactive map.
+            Powered by <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>.
+          </p>
         </div>
         <div class="card-body">
+          <div class="col-md-6 ml-auto mr-auto mb-3">
+            <div class="input-group">
+              <select id="station-select" class="form-control">
+                <option value="">-- Select a Fire Station --</option>
+                <option value="Sta. Lourdes">Sta. Lourdes</option>
+                <option value="Tagburos">Tagburos</option>
+                <option value="Sicsican">Sicsican</option>
+              </select>
+              <div class="input-group-append">
+                <button id="filter-button" class="btn btn-warning">Filter</button>
+              </div>
+            </div>
+          </div>
+
           <div class="col-md-10 ml-auto mr-auto">
-            <div id="map" style="width: 100%; height: 400px"></div>
+            <div id="map" style="width: 100%; height: 400px; box-shadow: 0 4px 16px rgba(0,0,0,0.2); border-radius: 10px;"></div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 <script>
   var map = L.map('map').setView([9.81644, 118.72239], 13);
+
   var truckIcon = L.icon({
-  iconUrl: '../static/img/firetruck.png', // Replace with the path to your red marker icon
-  iconSize: [50, 50], // Adjust the size as needed
+    iconUrl: '{% static "img/firetruck.png" %}',
+    iconSize: [50, 50]
   });
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
 
-
-  // Create an array to hold all the markers
-  var markers = [];
-
-  // Define the marker data
   var markerData = [
-  {
-    name: 'Sta. Lourdes',
-    latitude: 9.83369118406607,
-    longitude: 118.72275445554,
-    description: 'Near Sta. Lourdes National High School'
-  },
-  {
-    name: 'Tagburos',
-    latitude: 9.82084079557777,
-    longitude: 118.74401369655,
-    description: 'Near Tagburos Elementary School'
-  },
-  {
-    name: 'Sicsican',
-    latitude: 9.79555573875096,
-    longitude: 118.710565836493,
-    description: 'Near Sicsican Elementary'
-  }
-];
+    {
+      name: 'Sta. Lourdes',
+      latitude: 9.83369118406607,
+      longitude: 118.72275445554,
+      description: 'Near Sta. Lourdes National High School'
+    },
+    {
+      name: 'Tagburos',
+      latitude: 9.82084079557777,
+      longitude: 118.74401369655,
+      description: 'Near Tagburos Elementary School'
+    },
+    {
+      name: 'Sicsican',
+      latitude: 9.79555573875096,
+      longitude: 118.710565836493,
+      description: 'Near Sicsican Elementary'
+    }
+  ];
 
-  // Loop through the marker data and create markers
+  var markers = {};
+
   markerData.forEach(function (data) {
-      var latitude = parseFloat(data.latitude);
-      var longitude = parseFloat(data.longitude);
+    var latLng = [parseFloat(data.latitude), parseFloat(data.longitude)];
+    var marker = L.marker(latLng, { icon: truckIcon }).addTo(map);
+    var popupContent = `<b>${data.name}</b><br>${data.description}`;
+    marker.bindPopup(popupContent);
 
-      var marker = L.marker([latitude, longitude], { icon: truckIcon }).addTo(map);
+    marker.on('mouseover', function () { this.openPopup(); });
+    marker.on('mouseout', function () { this.closePopup(); });
 
-      // Create a popup and set its content
-      var popupContent = data.name;
-      var popup = L.popup().setContent(popupContent);
+    markers[data.name] = { marker: marker, latLng: latLng };
+  });
 
-      marker.bindPopup(popupContent);
-
-
-      // Bind mouseover and mouseout events to the marker
-      marker.on('mouseover', function (e) {
-          this.openPopup();
-      });
-
-      marker.on('mouseout', function (e) {
-          this.closePopup();
-      });
-
-      // Add the marker to the markers array
-      markers.push(marker);
+  // Filter button logic
+  document.getElementById('filter-button').addEventListener('click', function () {
+    var selectedStation = document.getElementById('station-select').value;
+    if (selectedStation && markers[selectedStation]) {
+      var latLng = markers[selectedStation].latLng;
+      map.setView(latLng, 15);
+      markers[selectedStation].marker.openPopup();
+    }
   });
 </script>
 {% endblock %}
